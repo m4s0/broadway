@@ -81,6 +81,19 @@ class DBALEventStore implements EventStore, EventStoreManagement
     /**
      * {@inheritDoc}
      */
+    public function has($id): bool
+    {
+        $statement = $this->prepareLoadStatement();
+        $statement->bindValue(1, $this->convertIdentifierToStorageValue($id));
+        $statement->bindValue(2, 0);
+        $statement->execute();
+
+        return (bool)$statement->fetch();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
     public function load($id): DomainEventStream
     {
         $statement = $this->prepareLoadStatement();
